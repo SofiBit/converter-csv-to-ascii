@@ -1,12 +1,11 @@
 # frozen_string_literal: true
 
-require_relative 'table/cell.rb'
 require_relative 'table/presenter.rb'
 require_relative 'table/row.rb'
 
 class AsciiTable
-  attr_reader :size
-  attr_accessor :rows, :width
+  attr_reader :size, :rows
+  attr_accessor :width
 
   def initialize
     @rows = []
