@@ -7,27 +7,13 @@ class AsciiTable
     attr_reader :cells
 
     def initialize(data)
-      @cells = data.map do |cell|
-        Cell.new(cell)
+      @cells = data.map.with_index do |cell, column|
+        Cell.new(cell, column)
       end
-    end
-
-    def width
-      @width ||= calculate_width
     end
 
     def height
       @height ||= cells.map(&:value).map(&:count).max
-    end
-
-    private
-
-    def calculate_width
-      height.times.each_with_object([]) do |index, width|
-        width << cells.map(&:value).map do |value|
-          value[index]
-        end.join.size
-      end.max
     end
   end
 end

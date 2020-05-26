@@ -6,13 +6,13 @@ require_relative 'ascii_table.rb'
 class Converter
   EXPANSION = 'csv'
 
-  attr_reader :path_file, :parser
+  attr_reader :file, :parser
 
-  def initialize(path_file)
-    @path_file = path_file
+  def initialize(file: file)
+    @file = file
     raise 'Expansion is invalid' unless format_valid?
 
-    @parser = Parser.new(path_file)
+    @parser = Parser.new(file)
   end
 
   def run
@@ -24,7 +24,7 @@ class Converter
   private
 
   def format_valid?
-    path_expansion = path_file.split('/').last.split('.')
+    path_expansion = file.split('/').last.split('.')
 
     path_expansion.size == 2 && path_expansion.last == EXPANSION
   end

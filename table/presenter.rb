@@ -8,61 +8,40 @@ class AsciiTable
     SPACE = ' '
     LINE_BREAK = "\n"
 
-    attr_reader :rows, :max_width, :table_picture
+    attr_reader :rows, :columns_sizes, :table_picture
 
-    def initialize(rows, max_width)
+    def initialize(rows, columns_sizes)
       @rows = rows
-      @max_width = max_width
+      @columns_sizes = columns_sizes
       @table_picture = []
     end
 
     def run
-      return puts 'The table is empty' if rows.empty?
-
-      table_picture << line_separator(rows.first) + LINE_BREAK
-      row_iterator
-      puts table_picture.join
+      presented_rows = rows.map { |row| present_row(row) }
+      table = presented_rows.product([separate_rows]).prepend(separate_rows)
+      puts table
     end
 
     private
 
-    def row_iterator
-      rows.each do |row|
-        present_row(row)
-        table_picture << line_separator(row) + LINE_BREAK
-      end
-    end
-
     def present_row(row)
-      row.height.times do |index|
-        row.cells.each do |cell|
-          table_picture << present_cell(cell, index)
-        end
-        table_picture << SEPARATOR + LINE_BREAK
+      (0..row.height - 1).to_a.map do |line_index|
+        row.cells.map do |cell|
+          present_cell(cell, line_index) + SEPARATOR
+        end.join.prepend(SEPARATOR)
       end
     end
 
-    def present_cell(cell, index)
-      cell_value = cell.value[index]
-      "#{SEPARATOR}#{cell_value}" + count_spaces(cell, cell_value)
+    def present_cell(cell, line_index)
+      value = cell.value[line_index].to_s
+      spaces = SPACE * (columns_sizes[cell.column] - value.to_s.size)
+      spaces + value
     end
 
-    def count_spaces(cell, cell_value)
-      spaces = cell.width
-      return spaces_string(spaces) if cell_value.nil?
-
-      spaces = cell.width - cell_value.size
-      spaces_string(spaces)
-    end
-
-    def spaces_string(spaces)
-      (1..spaces).to_a.map { |_string| SPACE }.join
-    end
-
-    def line_separator(row)
-      CELL_POINT + row.cells.each_with_object([]) do |cell, line|
-        line << (1..cell.width).to_a.map { |_char| '-' }.join + CELL_POINT
-      end.join
+    def separate_rows
+      columns_sizes.map do |width|
+        WIDTH_ELEMENT * width + CELL_POINT
+      end.join.prepend(CELL_POINT)
     end
   end
 end

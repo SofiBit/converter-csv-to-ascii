@@ -2,16 +2,14 @@
 
 module Type
   class Int
-    ALIGNMENT = ' '
-
     attr_reader :value
 
     def initialize(value)
-      @value = value
+      @value = value.to_i
     end
 
     def convert
-      ALIGNMENT + value.to_s
+      value.to_s
     end
   end
 end

@@ -2,12 +2,13 @@
 
 class AsciiTable
   class Cell
-    attr_reader :value, :width, :type
+    attr_reader :value, :max_width, :type, :column
 
-    def initialize(parameters)
+    def initialize(parameters, column)
+      @column = column
       @value = Array(parameters[:value])
       @type = parameters[:header]
-      @width = value.map(&:size).max
+      @max_width = value.map(&:size).max
     end
   end
 end

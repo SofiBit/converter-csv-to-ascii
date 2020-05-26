@@ -2,4 +2,4 @@
 
 require_relative 'converter.rb'
 
-Converter.new('example.csv').run
+Converter.new(file: 'example.csv').run
